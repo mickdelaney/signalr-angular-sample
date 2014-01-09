@@ -10,24 +10,37 @@
     <script type="text/javascript">
         
 
-        angular.module('app', []).controller('HomeCtrl', function ($scope) {
+        angular.module('app', [])
+            .factory('publish', ['$rootScope', function ($rootScope) {
+                return function () { $rootScope.$emit.apply($rootScope, arguments); };
+            }])
+            .factory('subscribe', ['$rootScope', function ($rootScope) {
+                return function () { $rootScope.$on.apply($rootScope, arguments); };
+            }])
+            .controller('HomeCtrl', ['$scope', 'publish', function ($scope, publish) {
             
-            var busHub = $.connection.busHub;
-            busHub.client.publish = function (key, data) {
-                console.log(key + ' ' + data);
-                $scope.$apply(function (scope) {
-                    scope.events.push({ name: key, value: data });
+                var busHub = $.connection.busHub;
+                busHub.client.publish = function (key, data) {
+                    
+                    $scope.$apply(function (scope) {
+                        scope.events.push({ name: key, value: data });
+                    });
+                    publish(key, data);
+                };
+            
+                $.connection.hub.start();
+
+                $scope.publish = function () {
+                    busHub.server.publish('messageSent', { text: 'mick - events' });
+                };
+
+                $scope.events = [];
+
+            }]).run(['subscribe', function (subscribe) {
+                subscribe('messageSent', function (event, data) {
+                    console.log('Run: ' + event + ' ' + data);
                 });
-            };
-            
-            $.connection.hub.start();
-
-            $scope.publish = function () {
-                busHub.server.publish('messageSent', { text: 'mick - events' });
-            };
-
-            $scope.events = [];
-        });
+            }]);
 
     </script>
 </head>
