@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" ng-app="app">
+<head>
+    <title></title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+    <script src="/Scripts/jquery.signalR-2.0.0.min.js"></script>
+
+    <script src="signalr/hubs"></script>
+    <script type="text/javascript">
+        
+
+        angular.module('app', []).controller('HomeCtrl', function ($scope) {
+            
+            var busHub = $.connection.busHub;
+            busHub.client.publish = function (key, data) {
+                console.log(key + ' ' + data);
+                $scope.$apply(function (scope) {
+                    scope.events.push({ name: key, value: data });
+                });
+            };
+            
+            $.connection.hub.start();
+
+            $scope.publish = function () {
+                busHub.server.publish('messageSent', { text: 'mick - events' });
+            };
+
+            $scope.events = [];
+        });
+
+    </script>
+</head>
+    <body ng-controller="HomeCtrl">
+        <button ng-click="publish()">Publish</button>
+        <ul>
+            <li ng-repeat="e in events">
+                {{e.name}}
+                <p>{{e.value | json}}</p>
+            </li>
+        </ul>
+    </body>
+</html>
