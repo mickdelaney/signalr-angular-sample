@@ -14,7 +14,7 @@
     <RootNamespace>SignalR_Sample</RootNamespace>
     <AssemblyName>SignalR-Sample</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -38,6 +38,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Hyperletter">
+      <HintPath>..\packages\Hyperletter.1.5.0.0\lib\net45\Hyperletter.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -129,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusHub.cs" />
+    <Compile Include="MessageConsumer.cs" />
     <Compile Include="PublishGetModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublishController.cs" />
@@ -149,7 +153,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>65219</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:65219/</IISUrl>
+          <IISUrl>http://localhost/signalrsample</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
